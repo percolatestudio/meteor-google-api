@@ -14,14 +14,14 @@ GoogleApiPromised = {
   //
   // XXX: todo, is it safe to assume that services.google.authToken will exist
   // after a successful refresh?? (it appears to always work, hehe :)
-  get: function(path, params) {
-    return this._callAndRefresh('GET', path, params);
+  get: function(path, options) {
+    return this._callAndRefresh('GET', path, options);
   },
   
-  _callAndRefresh: function(method, path, params) {
+  _callAndRefresh: function(method, path, options) {
     var self = this;
     
-    return self._call(method, path, params).then(function() {
+    return self._call(method, path, options).then(function() {
       return this;
     
     }, function(error) {
@@ -29,7 +29,7 @@ GoogleApiPromised = {
         console.log('google-api attempting token refresh');
 
         return self._refresh().then(function() {
-          return self._call(method, path, params);
+          return self._call(method, path, options);
         });
       }
       return this;
@@ -37,7 +37,7 @@ GoogleApiPromised = {
   },
   
   // wraps a GAPI Meteor.http call in a jQuery promise.
-  _call: function(method, path, params) {
+  _call: function(method, path, options) {
     console.log('GoogleApi._call, path:' + path);
 
     var deferred = new jQuery.Deferred();
@@ -45,12 +45,12 @@ GoogleApiPromised = {
     if (Meteor.user().services &&
         Meteor.user().services.google &&
         Meteor.user().services.google.accessToken) {
-      HTTP.call(method, this._host + '/' + path, {
-          params: params,
-          headers: {
-            'Authorization': 'Bearer ' + Meteor.user().services.google.accessToken
-          }
-        }, function(error, result) {
+      
+      options = options || {};
+      options.headers = options.headers || {};
+      options.headers.Authorization = 'Bearer ' + Meteor.user().services.google.accessToken;
+      
+      HTTP.call(method, this._host + '/' + path, options, function(error, result) {
           if (error) {
             deferred.reject(error);
           } else {

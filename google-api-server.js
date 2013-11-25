@@ -1,3 +1,9 @@
+// XXX: WE DON'T USE THIS RIGHT NOW!
+
+// I think the best approach moving forward is to make google-api-common totally
+// callback based, then use futures here and promises in client to get the two
+// apis.
+
 // XXX: ideally we'd use the google-api-common, but there's no jquery
 // and thus deferred on the server.
 //
