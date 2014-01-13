@@ -58,7 +58,7 @@ GoogleApiPromised = {
         if (error) {
           deferred.reject(error);
         } else {
-          deferred.resolve(result.data, result);
+          deferred.resolve(result.data);
         }
       });
     } else {

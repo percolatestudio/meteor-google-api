@@ -3,10 +3,10 @@ var Future = Npm.require('fibers/future');
 var wrapPromise = function(promise) {
   var future = new Future;
   promise
-    .then(future.return)
-    .fail(future.throw);
+    .then(function(data) { future.return(data); })
+    .fail(function(error) { future.throw(error); });
   
-  future.wait();
+  return future.wait();
 }
 
 GoogleApi = {
