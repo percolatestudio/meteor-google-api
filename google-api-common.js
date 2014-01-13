@@ -26,10 +26,7 @@ GoogleApiPromised = {
   _callAndRefresh: function(method, path, options) {
     var self = this;
     
-    return self._call(method, path, options).then(function() {
-      return this;
-    
-    }, function(error) {
+    return self._call(method, path, options).fail(function(error) {
       if (error.response && error.response.statusCode == 401) {
         console.log('google-api attempting token refresh');
 
@@ -37,7 +34,9 @@ GoogleApiPromised = {
           return self._call(method, path, options);
         });
       }
-      return this;
+      
+      // else..
+      throw error;
     });
   },
   
@@ -45,7 +44,7 @@ GoogleApiPromised = {
   _call: function(method, path, options) {
     console.log('GoogleApi._call, path:' + path);
 
-    var deferred = new Q.defer();
+    var deferred = Q.defer();
 
     if (Meteor.user().services &&
         Meteor.user().services.google &&
@@ -56,13 +55,12 @@ GoogleApiPromised = {
       options.headers.Authorization = 'Bearer ' + Meteor.user().services.google.accessToken;
       
       HTTP.call(method, this._host + '/' + path, options, function(error, result) {
-          if (error) {
-            deferred.reject(error);
-          } else {
-            deferred.resolve(result.data, result);
-          }
+        if (error) {
+          deferred.reject(error);
+        } else {
+          deferred.resolve(result.data, result);
         }
-      );
+      });
     } else {
       // XXX: perhaps we can ask them to log in here
       deferred.reject(new Meteor.Error(403, "Auth token not found." +
@@ -76,7 +74,7 @@ GoogleApiPromised = {
   _refresh: function() {
     console.log('GoogleApi._refresh');
 
-    var deferred = new Q.defer();
+    var deferred = Q.defer();
 
     Meteor.call('exchangeRefreshToken', function(error, result) {
       if (error) {
