@@ -18,6 +18,11 @@ GoogleApiPromised = {
     return this._callAndRefresh('GET', path, options);
   },
   
+  // XXX: do I add all of these? 
+  post: function(path, options) {
+    return this._callAndRefresh('POST', path, options);
+  },
+  
   _callAndRefresh: function(method, path, options) {
     var self = this;
     
@@ -40,7 +45,7 @@ GoogleApiPromised = {
   _call: function(method, path, options) {
     console.log('GoogleApi._call, path:' + path);
 
-    var deferred = new jQuery.Deferred();
+    var deferred = new Q.defer();
 
     if (Meteor.user().services &&
         Meteor.user().services.google &&
@@ -64,14 +69,14 @@ GoogleApiPromised = {
         "Connect your google account"));
     }
 
-    return deferred.promise();
+    return deferred.promise;
   },
 
   // wraps a token refresh call in a jQuery promise.
   _refresh: function() {
     console.log('GoogleApi._refresh');
 
-    var deferred = new jQuery.Deferred();
+    var deferred = new Q.defer();
 
     Meteor.call('exchangeRefreshToken', function(error, result) {
       if (error) {
@@ -81,6 +86,6 @@ GoogleApiPromised = {
       }
     });
 
-    return deferred.promise();
+    return deferred.promise;
   }
 }

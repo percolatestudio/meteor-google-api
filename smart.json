@@ -1,9 +1,11 @@
 {
   "name": "google-api",
-  "description": "",
+  "description": "A wrapper around Google's APIs that understands accounts-google",
   "homepage": "",
   "author": "",
   "version": "0.0.1",
   "git": "",
-  "packages": {}
+  "packages": {
+    "q": {}
+  }
 }

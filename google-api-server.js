@@ -1,57 +1,20 @@
-// XXX: WE DON'T USE THIS RIGHT NOW!
+var Future = Npm.require('fibers/future');
 
-// I think the best approach moving forward is to make google-api-common totally
-// callback based, then use futures here and promises in client to get the two
-// apis.
+var wrapPromise = function(promise) {
+  var future = new Future;
+  promise
+    .then(future.return)
+    .fail(future.throw);
+  
+  future.wait();
+}
 
-// XXX: ideally we'd use the google-api-common, but there's no jquery
-// and thus deferred on the server.
-//
-// If we can figure out a non-spaghetti way to use a promise on the server,
-// let's do that so we share code
 GoogleApi = {
   get: function(path, params) {
-    return this._callAndRefresh('GET', path, params);
+    return wrapPromise(GoogleApiPromised.get(path, params));
   },
   
-  _callAndRefresh: function(method, path, params) {
-    try {
-      return this._call(method, path, params);
-    } catch (error) {
-      if (error.response && error.response.statusCode == 401) {
-        console.log('google-api attempting token refresh');
-        
-        this._refresh()
-        return this._call(method, path, params);
-      } else {
-        throw error;
-      }
-    }
-  },
-  
-  // wraps a GAPI Meteor.http call in a jQuery promise.
-  _call: function(method, path, params) {
-    console.log('GoogleApi._call, path:' + path);
-    
-    if (Meteor.user().services &&
-        Meteor.user().services.google &&
-        Meteor.user().services.google.accessToken) {
-      
-      return HTTP.call(method, GoogleApiPromised._host + '/' + path, {
-        params: params,
-        headers: {
-          'Authorization': 'Bearer ' + Meteor.user().services.google.accessToken
-        }
-      }).data;
-    } else {
-      throw new Meteor.Error(403, "Auth token not found." +
-        "Connect your google account");
-    }
-  },
-
-  // wraps a token refresh call in a jQuery promise.
-  _refresh: function() {
-    console.log('GoogleApi._refresh');
-    Meteor.call('exchangeRefreshToken');
+  post: function(path, params) {
+    return wrapPromise(GoogleApiPromised.post(path, params));
   }
 }
