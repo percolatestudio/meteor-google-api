@@ -1,13 +1,20 @@
 Meteor.methods({
   // Obtain a new access token using the refresh token
-  exchangeRefreshToken: function() {
+  exchangeRefreshToken: function(userId) {
     this.unblock();
+    
+    var user;
+    if (userId && Meteor.isServer) {
+      user = Meteor.users.findOne({_id: userId});
+    } else {
+      user = Meteor.user();
+    }
 
     var config = Accounts.loginServiceConfiguration.findOne({service: "google"});
-    if (!config)
+    if (! config)
       throw new Meteor.Error(500, "Google service not configured.");
 
-    if (!Meteor.user().services.google || !Meteor.user().services.google.refreshToken)
+    if (! user.services || ! user.services.google || ! user.services.google.refreshToken)
       throw new Meteor.Error(500, "Refresh token not found.");
 
     var result = Meteor.http.call("POST",
@@ -16,7 +23,7 @@ Meteor.methods({
         params: {
           'client_id': config.clientId,
           'client_secret': config.secret,
-          'refresh_token': Meteor.user().services.google.refreshToken,
+          'refresh_token': user.services.google.refreshToken,
           'grant_type': 'refresh_token'
         }
     });
@@ -25,7 +32,7 @@ Meteor.methods({
       // console.log('success');
       // console.log(EJSON.stringify(result.data));
 
-      Meteor.users.update(Meteor.userId(), { 
+      Meteor.users.update(user._id, { 
         '$set': { 
           'services.google.accessToken': result.data.access_token,
           'services.google.expiresAt': (+new Date) + (1000 * result.data.expires_in),
