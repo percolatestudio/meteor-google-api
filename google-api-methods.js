@@ -16,17 +16,22 @@ Meteor.methods({
 
     if (! user.services || ! user.services.google || ! user.services.google.refreshToken)
       throw new Meteor.Error(500, "Refresh token not found.");
-
-    var result = Meteor.http.call("POST",
-      "https://accounts.google.com/o/oauth2/token",
-      {
-        params: {
-          'client_id': config.clientId,
-          'client_secret': config.secret,
-          'refresh_token': user.services.google.refreshToken,
-          'grant_type': 'refresh_token'
-        }
-    });
+    
+    try {
+      var result = Meteor.http.call("POST",
+        "https://accounts.google.com/o/oauth2/token",
+        {
+          params: {
+            'client_id': config.clientId,
+            'client_secret': config.secret,
+            'refresh_token': user.services.google.refreshToken,
+            'grant_type': 'refresh_token'
+          }
+      });
+    } catch (e) {
+      var code = e.response ? e.response.statusCode : 500;
+      throw new Meteor.Error(code, 'Unable to exchange google refresh token.', e.response)
+    }
     
     if (result.statusCode === 200) {
       // console.log('success');
@@ -41,7 +46,7 @@ Meteor.methods({
 
       return result.data;
     } else {
-      throw new Meteor.Error(500, 'Unable to exchange google refresh token.', result);
+      throw new Meteor.Error(result.statusCode, 'Unable to exchange google refresh token.', result);
     }
   }
 });
