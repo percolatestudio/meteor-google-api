@@ -41,7 +41,9 @@ GoogleApiPromised = {
       
         // else..
         throw error;
-      }, 'Google API First Call failed callback'));
+      
+      // if we throw an error, *we actually want it to throw*, q will catch it
+      }, function(error) { throw error }));
   },
   
   // wraps a GAPI Meteor.http call in a jQuery promise.
