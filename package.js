@@ -13,7 +13,7 @@ Package.on_use(function (api, where) {
 });
 
 Package.on_test(function (api) {
-  api.use(['google-api', 'tinytest', 'http', 'accounts-base']);
+  api.use(['google-api', 'tinytest', 'http', 'accounts-base', 'service-configuration']);
 
   api.add_files('google-api-tests.js', ['client', 'server']);
 });

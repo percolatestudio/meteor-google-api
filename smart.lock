@@ -1,0 +1,20 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "google-api": {
+        "path": "."
+      }
+    },
+    "packages": {
+      "google-api": {
+        "path": "."
+      },
+      "q": {
+        "git": "https://github.com/frozeman/q-meteor.git",
+        "tag": "v0.9.7",
+        "commit": "e5c10f087b76fda32ae6be4d8950ab2633c520a3"
+      }
+    }
+  }
+}
