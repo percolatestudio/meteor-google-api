@@ -55,19 +55,17 @@ var user = {
 Meteor.users.findOne = function() { return user; }
 
 if (Meteor.isServer) {
-  // Tinytest.add('GoogleApi - Server - get basic', function(test) {
-  //   HTTP.nextResult = 'foo';
-  //   var result = GoogleApi.get('/foo/bar', {user: user});
-  //   console.log('result is', result)
-  //
-  //   test.equal(result, 'foo');
-  // });
+  Tinytest.add('GoogleApi - Server - get basic', function(test) {
+    HTTP.nextResult = 'foo';
+    var result = GoogleApi.get('/foo/bar', {user: user});
+
+    test.equal(result, 'foo');
+  });
   
   Tinytest.add('GoogleApi - Server - get with refresh', function(test) {
     HTTP.nextResult = 'foo';
     HTTP.nextCall401 = true
     var result = GoogleApi.get('/foo/bar', {user: user});
-    console.log('result is', result)
 
     test.equal(result, 'foo');
   });
