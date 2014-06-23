@@ -3,7 +3,7 @@
 // TODO: migrate the promised version to wrap this.
 
 // kill logs
-// var Log = function () {}
+var Log = function () {}
 
 GoogleApiAsync = {
   // host component, shouldn't change
