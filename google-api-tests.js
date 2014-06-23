@@ -7,7 +7,6 @@ ServiceConfiguration.configurations.insert({
 });
 
 // mock out http
-HTTP.nextCall401 = false;
 HTTP.nextResult = '';
 HTTP.call = function(method, url, params, callback) {
   var self = this;
@@ -15,14 +14,10 @@ HTTP.call = function(method, url, params, callback) {
   if (_.isFunction(callback))
     return callAync.call(this, method, url, params, callback);
 
-  if (self.nextCall401) {
-    self.nextCall401 = false;
-    var error = new Error;
-    error.response = {statusCode: 401};
-    throw error;
-  }
-
-  return {statusCode:200, data: self.nextResult};
+  return {statusCode: 200, data: {
+    access_token: 'good',
+    expires_in: 200
+  }};
 }
 
 // async version
@@ -30,8 +25,8 @@ var callAync = function(method, url, params, callback) {
   var self = this;
 
   Meteor.setTimeout(function() {
-    if (self.nextCall401) {
-      self.nextCall401 = false;
+    if (params.headers && params.headers.Authorization && 
+        params.headers.Authorization.match(/bad/)) {
       return callback({response: {statusCode: 401}});
     }
 
@@ -43,29 +38,33 @@ var callAync = function(method, url, params, callback) {
 }
 
 
-// mock out Meteor.user
-var user = {
-  _id: 'mockedUserId',
-  services: {google: {
-    accessToken: '123',
-    refreshToken: '456'
-  }}
-}
-
-Meteor.users.findOne = function() { return user; }
-
 if (Meteor.isServer) {
   Tinytest.add('GoogleApi - Server - get basic', function(test) {
+    var userId =  Meteor.users.insert({
+      _id: 'mockedUserId' + test.id,
+      services: {google: {
+        accessToken: 'good',
+        refreshToken: '456'
+      }}
+    });
+
     HTTP.nextResult = 'foo';
-    var result = GoogleApi.get('/foo/bar', {user: user});
+    var result = GoogleApi.get('/foo/bar', {user: Meteor.users.findOne(userId)});
 
     test.equal(result, 'foo');
   });
   
   Tinytest.add('GoogleApi - Server - get with refresh', function(test) {
+    var userId =  Meteor.users.insert({
+      _id: 'mockedUserId' + test.id,
+      services: {google: {
+        accessToken: 'bad',
+        refreshToken: '456'
+      }}
+    });
+
     HTTP.nextResult = 'foo';
-    HTTP.nextCall401 = true
-    var result = GoogleApi.get('/foo/bar', {user: user});
+    var result = GoogleApi.get('/foo/bar', {user: Meteor.users.findOne(userId)});
 
     test.equal(result, 'foo');
   });

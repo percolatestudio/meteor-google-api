@@ -36,6 +36,11 @@ GoogleApiAsync = {
             if (error)
               return callback(error);
             
+            // if we have the user, we'll need to re-fetch them, as their
+            // access token will have changed.
+            if (options.user)
+              options.user = Meteor.users.findOne(options.user._id);
+            
             self._call(method, path, options, callback);
           });
         } else {
