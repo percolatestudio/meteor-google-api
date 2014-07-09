@@ -27,11 +27,11 @@ var callAync = function(method, url, params, callback) {
   Meteor.setTimeout(function() {
     if (params.headers && params.headers.Authorization && 
         params.headers.Authorization.match(/bad/)) {
-      console.log('returning 401')
+      // console.log('returning 401')
       return callback({response: {statusCode: 401}});
     }
 
-    console.log('returning', self.nextResult, 'from Http.call')
+    // console.log('returning', self.nextResult, 'from Http.call')
     return callback(null, {
       statusCode: 200,
       data: self.nextResult
