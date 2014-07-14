@@ -5,21 +5,21 @@
 // kill logs
 var Log = function () {}
 
-GoogleApiAsync = {
+GoogleApi = {
   // host component, shouldn't change
   _host: 'https://www.googleapis.com',
   
   // Performs a GET against the google API specified by path with params
   //
   // Will retry with a refreshed token if the call appears to fail due to tokens
-  get: function(path, options, callback) {
+  get: wrapAsync(function(path, options, callback) {
     return this._callAndRefresh('GET', path, options, callback);
-  },
+  }),
   
   // XXX: do I add all of these? 
-  post: function(path, options, callback) {
+  post: wrapAsync(function(path, options, callback) {
     return this._callAndRefresh('POST', path, options, callback);
-  },
+  }),
   
   _callAndRefresh: function(method, path, options, callback) {
     var self = this;

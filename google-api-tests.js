@@ -96,8 +96,11 @@ if (Meteor.isServer) {
       loginAs(userId, function() {
         HTTP.nextResult = 'foo';
         GoogleApi.get('/foo/bar', {}).then(function(result) {
+          console.log(result)
           test.equal(result, 'foo');
           done();
+        }).fail(function(err) {
+          console.log(err)
         });
       });
     });
