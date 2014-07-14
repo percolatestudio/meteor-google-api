@@ -9,11 +9,21 @@ GoogleApi = {
   //
   // Will retry with a refreshed token if the call appears to fail due to tokens
   get: wrapAsync(function(path, options, callback) {
+    if (_.isFunction(options)) {
+      callback = options;
+      options = {};
+    }
+
     return this._callAndRefresh('GET', path, options, callback);
   }),
   
   // XXX: do I add all of these? 
   post: wrapAsync(function(path, options, callback) {
+    if (_.isFunction(options)) {
+      callback = options;
+      options = {};
+    }
+
     return this._callAndRefresh('POST', path, options, callback);
   }),
   
