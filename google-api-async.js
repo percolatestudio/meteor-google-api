@@ -1,7 +1,3 @@
-// XXX: new version, using a vanilla, async callback style.
-
-// TODO: migrate the promised version to wrap this.
-
 // kill logs
 var Log = function () {}
 
