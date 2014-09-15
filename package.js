@@ -3,7 +3,10 @@ Package.describe({
 });
 
 Package.on_use(function (api, where) {
-  api.use(['http', 'livedata', 'google', 'q', 'accounts-base']);
+  if (api.versionsFrom)
+    api.use(['http', 'livedata', 'google', 'mrt:q', 'accounts-base']);
+  else
+    api.use(['http', 'livedata', 'google', 'q', 'accounts-base']);
   
   api.add_files('google-api-common.js', ['client', 'server']);
   api.add_files('google-api-client.js', ['client']);
