@@ -3,7 +3,10 @@ Package.describe({
 });
 
 Package.on_use(function (api, where) {
-  api.use(['http', 'livedata', 'google', 'q', 'accounts-base', 'underscore']);
+  if (api.versionsFrom)
+    api.use(['http', 'livedata', 'google', 'mrt:q', 'accounts-base', 'underscore']);
+  else
+    api.use(['http', 'livedata', 'google', 'q', 'accounts-base', 'underscore']);
   
   api.add_files(['utils.js', 'google-api-async.js'], ['client', 'server']);
   api.add_files(['google-api-methods.js'], ['server']);
