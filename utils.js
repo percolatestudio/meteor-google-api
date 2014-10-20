@@ -5,6 +5,8 @@
 // 2i. else on the server, run sync
 // 2ii. else on the client, return a promise
 
+var wrap = Meteor.wrapAsync || Meteor._wrapAsync;
+
 wrapAsync = function(fn) {
   return function(/* arguments */) {
     var args = _.toArray(arguments);
@@ -14,7 +16,7 @@ wrapAsync = function(fn) {
       if (Meteor.isClient) {
         return Q.nfapply(_.bind(fn, this), args);
       } else {
-        return Meteor._wrapAsync(fn).apply(this, args);
+        return wrap(fn).apply(this, args);
       }
     }
   }

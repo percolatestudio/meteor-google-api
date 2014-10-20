@@ -1,12 +1,16 @@
 Package.describe({
-  summary: "A promises based library to interact with Google's API"
+  name: 'percolate:google-api',
+  summary: "A Meteor library to interact with Google's API",
+  version: '1.0.0'
 });
 
 Package.on_use(function (api, where) {
-  if (api.versionsFrom)
-    api.use(['http', 'livedata', 'google', 'mrt:q', 'accounts-base', 'underscore']);
-  else
+  if (api.versionsFrom) {
+    api.versionsFrom('0.9.0');
+    api.use(['http', 'livedata', 'google', 'mrt:q@1.0.1', 'accounts-base', 'underscore']);
+  } else {
     api.use(['http', 'livedata', 'google', 'q', 'accounts-base', 'underscore']);
+  }
   
   api.add_files(['utils.js', 'google-api-async.js'], ['client', 'server']);
   api.add_files(['google-api-methods.js'], ['server']);
@@ -15,7 +19,7 @@ Package.on_use(function (api, where) {
 });
 
 Package.on_test(function (api) {
-  api.use(['google-api', 'tinytest', 'http', 'accounts-base', 'service-configuration']);
+  api.use(['percolate:google-api', 'tinytest', 'http', 'accounts-base', 'service-configuration']);
 
   api.add_files('google-api-tests.js', ['client', 'server']);
 });
