@@ -1,7 +1,7 @@
 Package.describe({
   name: 'percolate:google-api',
   summary: "A Meteor library to interact with Google's API",
-  version: '1.0.1',
+  version: '1.0.2',
   git: 'https://github.com/percolatestudio/meteor-google-api'
 });
 

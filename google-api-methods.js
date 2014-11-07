@@ -1,6 +1,6 @@
 Meteor.methods({
   // Obtain a new access token using the refresh token
-  exchangeRefreshToken: function(userId) {
+  exchangeRefreshToken: function (userId) {
     this.unblock();
     
     var user;
