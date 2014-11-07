@@ -7,8 +7,8 @@
 
 var wrap = Meteor.wrapAsync || Meteor._wrapAsync;
 
-wrapAsync = function(fn) {
-  return function(/* arguments */) {
+wrapAsync = function (fn) {
+  return function (/* arguments */) {
     var args = _.toArray(arguments);
     if (_.isFunction(args[args.length - 1])) {
       return fn.apply(this, args);

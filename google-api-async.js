@@ -5,18 +5,18 @@ GoogleApi = {
   // host component, shouldn't change
   _host: 'https://www.googleapis.com',
 
-  _callAndRefresh: function(method, path, options, callback) {
+  _callAndRefresh: function (method, path, options, callback) {
     var self = this;
     options = options || {};
         
     self._call(method, path, options,       
       // need to bind the env here so we can do mongo writes in the callback 
       // (when refreshing), if we call this on the server
-      Meteor.bindEnvironment(function(error, result) {
+      Meteor.bindEnvironment(function (error, result) {
         if (error && error.response && error.response.statusCode == 401) {
           Log('google-api attempting token refresh');
 
-          return self._refresh(options.user, function(error) {
+          return self._refresh(options.user, function (error) {
             if (error)
               return callback(error);
             
@@ -34,7 +34,7 @@ GoogleApi = {
   },
   
   // call a GAPI Meteor.http function if the accessToken is good
-  _call: function(method, path, options, callback) {
+  _call: function (method, path, options, callback) {
     Log('GoogleApi._call, path:' + path);
     
     options = options || {};
@@ -45,7 +45,7 @@ GoogleApi = {
       options.headers = options.headers || {};
       options.headers.Authorization = 'Bearer ' + user.services.google.accessToken;
     
-      HTTP.call(method, this._host + '/' + path, options, function(error, result) {
+      HTTP.call(method, this._host + '/' + path, options, function (error, result) {
         callback(error, result && result.data);
       });
     } else {
@@ -54,10 +54,10 @@ GoogleApi = {
     }
   },
 
-  _refresh: function(user, callback) {
+  _refresh: function (user, callback) {
     Log('GoogleApi._refresh');
 
-    Meteor.call('exchangeRefreshToken', user && user._id, function(error, result) {
+    Meteor.call('exchangeRefreshToken', user && user._id, function (error, result) {
       callback(error, result && result.access_token)
     });
   }
@@ -65,8 +65,8 @@ GoogleApi = {
 
 // setup HTTP verbs
 httpVerbs = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
-_.each(httpVerbs, function(verb) {
-  GoogleApi[verb.toLowerCase()] = wrapAsync(function(path, options, callback) {
+_.each(httpVerbs, function (verb) {
+  GoogleApi[verb.toLowerCase()] = wrapAsync(function (path, options, callback) {
     if (_.isFunction(options)) {
       callback = options;
       options = {};
