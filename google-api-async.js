@@ -39,8 +39,9 @@ GoogleApi = {
     
     options = options || {};
     var user = options.user || Meteor.user();
-    
-    if (user && user.services && user.services.google && 
+    delete options.user;
+
+    if (user && user.services && user.services.google &&
         user.services.google.accessToken) {
       options.headers = options.headers || {};
       options.headers.Authorization = 'Bearer ' + user.services.google.accessToken;
