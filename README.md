@@ -28,3 +28,5 @@ If the user's access token has expired, it will transparently call the `exchange
 # Contributions
 
 Are welcome.
+
+(c) Percolate Studio, maintained by Tom Coleman (@tmeasday).
