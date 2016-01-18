@@ -47,6 +47,8 @@ GoogleApi = {
       options.headers = options.headers || {};
       options.headers.Authorization = 'Bearer ' + user.services.google.accessToken;
 
+      path = /^http(s)?:\/\//.test(path)?path:this._host + '/' + path;
+
       HTTP.call(method, this._host + '/' + path, options, function(error, result) {
         callback(error, result && result.data);
       });
