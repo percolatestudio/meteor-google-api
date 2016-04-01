@@ -3,6 +3,14 @@ Meteor.methods({
   exchangeRefreshToken: function(userId) {
     this.unblock();
     
+    if (this.connection) {  //when called from client
+      if (this.userId) {
+        userId = this.userId;
+      } else {
+        throw new Meteor.Error(403, "Must be signed in to use Google API.");
+      } 
+    }
+    
     var user;
     if (userId && Meteor.isServer) {
       user = Meteor.users.findOne({_id: userId});
