@@ -8,9 +8,9 @@ Package.describe({
 Package.on_use(function (api, where) {
   if (api.versionsFrom) {
     api.versionsFrom('0.9.0');
-    api.use(['http', 'livedata', 'google', 'mrt:q@1.0.1', 'accounts-base', 'underscore']);
+    api.use(['http', 'livedata', 'google-oauth', 'mrt:q@1.0.1', 'accounts-base', 'underscore']);
   } else {
-    api.use(['http', 'livedata', 'google', 'q', 'accounts-base', 'underscore']);
+    api.use(['http', 'livedata', 'google-oauth', 'q', 'accounts-base', 'underscore']);
   }
 
   api.add_files(['utils.js', 'google-api-async.js'], ['client', 'server']);
