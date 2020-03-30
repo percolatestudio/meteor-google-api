@@ -26,7 +26,7 @@ Meteor.methods({
       throw new Meteor.Error(500, "Refresh token not found.");
     
     try {
-      var result = Meteor.http.call("POST",
+      var result = HTTP.call("POST",
         "https://accounts.google.com/o/oauth2/token",
         {
           params: {
