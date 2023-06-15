@@ -28,5 +28,5 @@ Package.onTest(function (api) {
     'service-configuration',
     'underscore']);
 
-  api.add_files('google-api-tests.js', ['client', 'server']);
+  api.addFiles('google-api-tests.js', ['client', 'server']);
 });
